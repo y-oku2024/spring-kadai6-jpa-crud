@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Item;
-import com.example.demo.entity.User;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ItemRepository;
+import com.example.demo.repository.UserRepository;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -28,27 +28,10 @@ public class ItemController {
 	CategoryRepository categoryRepository;
 
 	@Autowired
-	HttpSession session;
+	UserRepository userRepository;
 
 	@Autowired
-	User user;
-
-	//
-	@GetMapping({ "/", "/logout" })
-	public String top(Model model) {
-		session.invalidate();
-		return "login";
-	}
-
-	@PostMapping({ "login" })
-	public String login(
-			@RequestParam("name") String name,
-			Model model) { 
-		// セッションスコープに保持されたアカウント情報に名前をセット
-		user.setName(name);
-
-		return "redirect:/items";
-	}
+	HttpSession session;
 
 	// 商品一覧表示
 	@GetMapping("/items")
