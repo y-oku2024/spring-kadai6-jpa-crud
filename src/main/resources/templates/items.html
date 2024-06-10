@@ -8,6 +8,9 @@
 
 <body>
 	<h1>商品一覧</h1>
+	こんにちは、[[${@user.name}]]さん<a href="/logout">[ログアウト]</a>
+	
+	<br>
 
 	<a href="/items">全商品</a>
 	<a th:each="category:${categories}" th:href="@{/items(categoryId=${category.id})}" th:text="${category.name}"

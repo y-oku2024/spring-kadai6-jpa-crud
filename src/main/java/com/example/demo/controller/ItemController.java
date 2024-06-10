@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.entity.Category;
 import com.example.demo.entity.Item;
+import com.example.demo.entity.User;
 import com.example.demo.repository.CategoryRepository;
 import com.example.demo.repository.ItemRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ItemController {
@@ -24,8 +27,31 @@ public class ItemController {
 	@Autowired
 	CategoryRepository categoryRepository;
 
+	@Autowired
+	HttpSession session;
+
+	@Autowired
+	User user;
+
+	//
+	@GetMapping({ "/", "/logout" })
+	public String top(Model model) {
+		session.invalidate();
+		return "login";
+	}
+
+	@PostMapping({ "login" })
+	public String login(
+			@RequestParam("name") String name,
+			Model model) { 
+		// セッションスコープに保持されたアカウント情報に名前をセット
+		user.setName(name);
+
+		return "redirect:/items";
+	}
+
 	// 商品一覧表示
-	@GetMapping("/")
+	@GetMapping("/items")
 	public String index(Model model) {
 		// itemsテーブルから全商品の一覧を取得
 		List<Item> itemList = itemRepository.findAll();
@@ -36,7 +62,7 @@ public class ItemController {
 	}
 
 	// 商品一覧表示（カテゴリーによる絞り込み）
-	@GetMapping("/items")
+	@GetMapping("/items/category")
 	public String items(
 			@RequestParam(name = "categoryId", defaultValue = "") Integer categoryId,
 			Model model) {
